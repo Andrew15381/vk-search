@@ -11,6 +11,11 @@ vkbottle = "*"
 pydocstyle = "*"
 flake8 = "*"
 sphinx = "*"
+pybabel = "*"
+pytest = "*"
+doit = "*"
+setuptools = "*"
+build = "*"
 
 [requires]
 python_version = "3.8"
