@@ -1,3 +1,5 @@
+"""Contains vk scripts and python async functions for getting lists of friends and subs."""
+
 from vkbottle import API, vkscript
 
 MAX_MEMS_TOTAL = 20000  # vkscript can't send more than 5 mb
@@ -9,6 +11,25 @@ MAX_FRIENDS_SINGLE = 5000  # get_friends returns less than 5000 friends
 
 @vkscript
 def get_members_script(api, group_id: int, offset: int, count: int, per_req: int) -> dict:
+    """Vkscript to get group members with offset.
+
+    :param api: vk api
+    :type api: vkbottle.API
+
+    :param group_id: group id
+    :type group_id: int
+
+    :param offset: offset to start from
+    :type offset: int
+
+    :param count: count of users to get
+    :type count: int
+
+    :param per_req: count of users to get per single api call
+    :type per_req: int
+
+    :return: dict
+    """
     total_mems = []
     i = offset
     while i + per_req <= offset + count:
@@ -26,6 +47,16 @@ def get_members_script(api, group_id: int, offset: int, count: int, per_req: int
 
 
 async def get_subscriptions_members(api: API, user_id: int) -> list:
+    """Gets all user's groups' subs by multiple vkscript calls.
+
+    :param api: vk api
+    :type api: vkbottle.API
+
+    :param user_id: user id
+    :type user_id: int
+
+    :return: list
+    """
     try:
         subs = await api.users.get_subscriptions(user_id=user_id)
     except:
@@ -54,7 +85,26 @@ async def get_subscriptions_members(api: API, user_id: int) -> list:
 
 
 @vkscript
-def get_friends_script(api, user_id: int, offset: int, count: int, per_req: int) -> list:
+def get_friends_script(api, user_id: int, offset: int, count: int, per_req: int) -> dict:
+    """Vkscript to get user friends with offset.
+
+    :param api: vk api
+    :type api: vkbottle.API
+
+    :param user_id: user id
+    :type user_id: int
+
+    :param offset: offset to start from
+    :type offset: int
+
+    :param count: count of users to get
+    :type count: int
+
+    :param per_req: count of users to get per single api call
+    :type per_req: int
+
+    :return: dict
+    """
     total_friends = []
     i = offset
     while i + per_req <= offset + count:
@@ -70,8 +120,18 @@ def get_friends_script(api, user_id: int, offset: int, count: int, per_req: int)
         total_friends.extend(friends)
     return {'items': total_friends}
 
-    
+
 async def get_friends(api: API, user_id: int) -> list:
+    """Gets all user's friends by multiple vkscript calls.
+
+    :param api: vk api
+    :type api: vkbottle.API
+
+    :param user_id: user id
+    :type user_id: int
+
+    :return: list
+    """
     try:
         response = await api.friends.get(user_id=user_id)
         total_friends_count = response.count
@@ -90,4 +150,3 @@ async def get_friends(api: API, user_id: int) -> list:
                                                             per_req=MAX_FRIENDS_SINGLE))
         total_friends.extend(friends['response']['items'])
     return total_friends
-

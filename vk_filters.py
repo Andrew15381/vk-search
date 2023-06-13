@@ -1,4 +1,24 @@
-def filter_by(users: list, field: str, value: int) -> list:
+"""Contains tools for users filtering."""
+
+
+def filter_by(users: list, field: str, value: str) -> list:
+    """Filters out some users based on field:
+
+        name - search for value substring in full name,
+        bdate - search for value substring in bdate,
+        id - leave users with unique ids.
+
+    :param users: users list to filter
+    :type users: list
+
+    :param field: field to filter by
+    :type field: str
+
+    :param value: value to filter by
+    :type value: str
+
+    :return: list
+    """
     ids = set()
     res = []
     for user in users:

@@ -1,3 +1,5 @@
+"""Bot main, contains commands' handlers."""
+
 import config
 from limited_client import LimitSingleAiohttpClient
 from vk_requests import get_friends, get_subscriptions_members
@@ -13,13 +15,35 @@ api = API(token=config.VK_API_TOKEN, http_client=LimitSingleAiohttpClient())
 
 @dp.message_handler(commands=['help', 'start'])
 async def start(message: types.Message) -> None:
+    """Handles help and start commands, outputs help message with commands description.
+
+    :param message: message object
+    :type message: aiogram.type.Message
+    """
     with open('help.txt', 'r') as file:
         mes = file.read()
     await message.answer(mes)
 
 
 @dp.message_handler(commands=['search'])
-async def friends_name(message: types.Message, command: filters.Command.CommandObj) -> None:
+async def search(message: types.Message, command: filters.Command.CommandObj) -> None:
+    """Handles search command.
+
+    Parameters: user_id and modificators.
+    Modificators are applied step by step.
+    Available modificators:
+        friends (add current users' friends to next step),
+        subs (add current users' groups subs to next step),
+        name (filter current users by name part, both first and last),
+        bdate (filter current users by bdate part).
+    Checks parameters for errors.
+
+    :param message: message object
+    :type msg: aiogram.type.Message
+
+    :param command: command object
+    :type command: aiogram.filters.Command.CommandObj
+    """
     if command.args:
         args = command.args.split()
         user_id, mods = int(args[0]), args[1:]
