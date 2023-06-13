@@ -7,15 +7,8 @@ MAX_FRIENDS_TOTAL = 20000
 MAX_FRIENDS_SINGLE = 5000  # get_friends returns less than 5000 friends
 
 
-async def get_id(api, screen_name):
-    response = await api.users.get(user_ids = screen_name)
-    response = response[0].dict()
-    id = response["id"]
-    return id
-
-
 @vkscript
-def get_members_script(api, group_id: int, offset: int, count: int, per_req: int):
+def get_members_script(api, group_id: int, offset: int, count: int, per_req: int) -> dict:
     total_mems = []
     i = offset
     while i + per_req <= offset + count:
@@ -32,7 +25,7 @@ def get_members_script(api, group_id: int, offset: int, count: int, per_req: int
     return {'items': total_mems}
 
 
-async def get_subscriptions_members(api: API, user_id: int):
+async def get_subscriptions_members(api: API, user_id: int) -> list:
     try:
         subs = await api.users.get_subscriptions(user_id=user_id)
     except:
@@ -61,7 +54,7 @@ async def get_subscriptions_members(api: API, user_id: int):
 
 
 @vkscript
-def get_friends_script(api, user_id: int, offset: int, count: int, per_req: int):
+def get_friends_script(api, user_id: int, offset: int, count: int, per_req: int) -> list:
     total_friends = []
     i = offset
     while i + per_req <= offset + count:
@@ -78,7 +71,7 @@ def get_friends_script(api, user_id: int, offset: int, count: int, per_req: int)
     return {'items': total_friends}
 
     
-async def get_friends(api: API, user_id: int):
+async def get_friends(api: API, user_id: int) -> list:
     try:
         response = await api.friends.get(user_id=user_id)
         total_friends_count = response.count

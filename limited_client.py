@@ -7,7 +7,7 @@ from vkbottle.http import SingleAiohttpClient
 class AsyncLimit:
     limits = dict()
 
-    def __init__(self, limit_id, limit, period):
+    def __init__(self, limit_id: str, limit: int, period: int):
         self.id = limit_id
         self.limit = limit
         if limit_id not in AsyncLimit.limits:
@@ -27,7 +27,7 @@ class AsyncLimit:
 
 
 class MetaLimitClient(ABCMeta):
-    def __new__(cls, name, bases, attrs, limit_id, limit, period):
+    def __new__(cls, name, bases, attrs, limit_id: str, limit: int, period: int):
         instance = super().__new__(cls, name, bases, attrs)
         instance.request_raw = AsyncLimit(limit_id, limit, period)(instance.request_raw)
         instance.request_json = AsyncLimit(limit_id, limit, period)(instance.request_json)

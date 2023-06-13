@@ -12,14 +12,14 @@ api = API(token=config.VK_API_TOKEN, http_client=LimitSingleAiohttpClient())
 
 
 @dp.message_handler(commands=['help', 'start'])
-async def start(message: types.Message):
+async def start(message: types.Message) -> None:
     with open('help.txt', 'r') as file:
         mes = file.read()
     await message.answer(mes)
 
 
 @dp.message_handler(commands=['search'])
-async def friends_name(message: types.Message, command: filters.Command.CommandObj):
+async def friends_name(message: types.Message, command: filters.Command.CommandObj) -> None:
     if command.args:
         args = command.args.split()
         user_id, mods = int(args[0]), args[1:]

@@ -1,4 +1,4 @@
-def filter_by(users, field, value):
+def filter_by(users: list, field: str, value: int) -> list:
     ids = set()
     res = []
     for user in users:
