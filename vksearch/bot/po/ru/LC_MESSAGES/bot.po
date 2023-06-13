@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-06-13 10:00+0300\n"
+"POT-Creation-Date: 2023-06-13 13:31+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: vksearch/bot/__main__.py:27
+#: vksearch/bot/__main__.py:28
 msgid ""
 "Commands list:\n"
 "/start - start bot\n"
@@ -51,11 +51,11 @@ msgstr ""
 "Пример:\n"
 "/search 168768958 friends name(\"Azimov\")"
 
-#: vksearch/bot/__main__.py:88
+#: vksearch/bot/__main__.py:89
 msgid "Found more than 100 users, try to narrow the search"
 msgstr "Найдено больше 100 пользователей, уточните запрос"
 
-#: vksearch/bot/__main__.py:93
+#: vksearch/bot/__main__.py:94
 msgid "Enter a user id and a set of modifications to start"
 msgstr "Укажите аккаунт для старта и набор расширений/фильтров"
 

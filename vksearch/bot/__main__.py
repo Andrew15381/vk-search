@@ -9,7 +9,7 @@ from aiogram import Bot, Dispatcher, executor, types, filters
 import gettext
 import os.path
 
-tr = gettext.translation('bot', os.path.dirname(__file__) + '/vksearch/bot/po', languages=['ru'])
+tr = gettext.translation('bot', os.path.dirname(__file__) + '/po', languages=['ru'])
 tr.install()
 _ = tr.gettext
 
@@ -95,6 +95,7 @@ async def search(message: types.Message, command: filters.Command.CommandObj) ->
 
 
 def main():
+    """Starts bot dispatcher polling."""
     executor.start_polling(dp, skip_updates=True)
 
 
