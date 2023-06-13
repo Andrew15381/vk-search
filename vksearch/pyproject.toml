@@ -1,0 +1,21 @@
+[project]
+name = "vsb"
+version = "0.0.1"
+description = "TG bot for extended vk friends search"
+requires-python = ">=3.8"
+authors = [{name = "Andrey Chistobaev", email = "s02200519@gse.cs.msu.ru"}, {name = "Natalya Pronina", email = "natalka-pronina@mail.ru"}]
+dependencies = ["vkbottle", "aiogram"]
+
+
+[project.scripts]
+bot = "bot.__main__:main"
+
+[build-system]
+requires = ["sphinx", "build", "setuptools", "doit"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-dir]
+bot = "bot"
+
+[tool.setuptools.package-data]
+bot = ["po/ru/*/*.mo"]

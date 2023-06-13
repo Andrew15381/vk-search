@@ -8,17 +8,20 @@ requests = "*"
 beautifulsoup4 = "*"
 vkbottle = "*"
 aiogram = "*"
-vkbottle = "*"
-
-[dev-packages]
-pydocstyle = "*"
-flake8 = "*"
+doit = "*"
 sphinx = "*"
 pybabel = "*"
 pytest = "*"
-doit = "*"
+pydocstyle = "*"
+flake8 = "*"
 setuptools = "*"
 build = "*"
+pytest-async = "*"
+pytest-asyncio = "*"
+
+[dev-packages]
+sphinx = "*"
+doit = "*"
 
 [requires]
 python_version = "3.8"
