@@ -1,51 +1,53 @@
-from aiogram import Bot, Dispatcher, executor, types
-from vk_requests import get_friends
-from aiogram import Dispatcher, types
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
+import config
+from limited_client import LimitSingleAiohttpClient
+from vk_requests import get_friends, get_subscriptions_members
+from vk_filters import filter_by
+from vkbottle import API
+from aiogram import Bot, Dispatcher, executor, types, filters
 
-# aiogram==2.25.1
-# Link to the bot: https://t.me/vk_search_1984_bot
 
-# Token from @BotFather
-API_TOKEN = '5832369881:AAEO3bFyKuciITnHQ2bQ91BvWZTulIfDUK8' 
-
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=config.TG_API_TOKEN)
 dp = Dispatcher(bot)
+api = API(token=config.VK_API_TOKEN, http_client=LimitSingleAiohttpClient())
 
-@dp.message_handler(commands=['help']) 
-async def help(message: types.Message):
+
+@dp.message_handler(commands=['help', 'start'])
+async def start(message: types.Message):
     with open('help.txt', 'r') as file:
         mes = file.read()
     await message.answer(mes)
-    
-
-@dp.message_handler(commands=['start']) 
-async def start(message: types.Message):
-    await message.answer(
-        "Привет!\nЕсли не знаешь, что сказать, напиши /help.")
 
 
-@dp.message_handler(commands=['friends_name']) 
-async def friends_name(message: types.Message, command):
+@dp.message_handler(commands=['search'])
+async def friends_name(message: types.Message, command: filters.Command.CommandObj):
     if command.args:
-        await message.answer(f"Сейчас посчитаю друзей у {command.args}")
-
-        access_token = 'eaae23abeaae23abeaae23abdbe9bdb8f1eeaaeeaae23ab8e923c275dce8f0a13fa6e39'
-        # user_id = "https://vk.com/strong_machina"
-        user_id = command.args
-        num_friends, list_friends = await get_friends(access_token, user_id)
-        await message.answer(f"Ответ: {num_friends} друзей")
+        args = command.args.split()
+        user_id, mods = int(args[0]), args[1:]
+        users = [{'id': user_id, 'bdate': '0.0.0000', 'first_name': '', 'last_name': ''}]
+        for mod in mods:
+            new_users_total = []
+            if mod == 'friends':
+                for user in users:
+                    new_users = await get_friends(api, user['id'])
+                    new_users_total += new_users
+            elif mod == 'subs':
+                for user in users:
+                    new_users = await get_subscriptions_members(api, int(user['id']))
+                    new_users_total += new_users
+            elif mod.startswith('name') and len(mod) > 8:
+                name = mod[6:-2]
+                new_users_total += filter_by(users, 'name', name)
+            elif mod.startswith('bdate') and len(mod) > 9:
+                bdate = mod[7:-2]
+                new_users_total += filter_by(users, 'bdate', bdate)
+            users = filter_by(new_users_total, 'id', None)
+        if len(users) > 100:
+            await message.answer("Найдено больше 100 пользователей, уточните запрос")
+        else:
+            for user in users:
+                await message.answer(f"http://vk.com/id{user['id']}")
     else:
-        await message.answer("Пожалуйста, укажите аккаунт после команды /friends_name!")
-
-
-@dp.message_handler()
-async def echo(message: types.Message):
-    if "ня" in message.text.lower() or "nya" in message.text.lower():
-        await message.answer("Мя!")
-    else:
-        await message.answer(f"""Нет, ты "{message.text}".""")
+        await message.answer("Укажите аккаунт для старта и набор расширений/фильтров")
 
 
 if __name__ == '__main__':

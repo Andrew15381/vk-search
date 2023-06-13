@@ -1,9 +1,9 @@
 from vkbottle import API, vkscript
 
-MAX_MEMS_TOTAL = 25000  # vkscript can't send more than 5 mb
+MAX_MEMS_TOTAL = 20000  # vkscript can't send more than 5 mb
 MAX_MEMS_SINGLE = 1000  # get_members returns less than 1000 members
 
-MAX_FRIENDS_TOTAL = 125000
+MAX_FRIENDS_TOTAL = 20000
 MAX_FRIENDS_SINGLE = 5000  # get_friends returns less than 5000 friends
 
 
@@ -19,12 +19,15 @@ def get_members_script(api, group_id: int, offset: int, count: int, per_req: int
     total_mems = []
     i = offset
     while i + per_req <= offset + count:
-        mems = api.groups.get_members(group_id=group_id, offset=i, count=per_req).items
+        mems = api.groups.get_members(group_id=group_id, offset=i, count=per_req, fields=['bdate']).items
         total_mems.extend(mems)
         i += per_req
     if count % per_req != 0:
         tail_start = count - count % per_req
-        mems = api.groups.get_members(group_id=group_id, offset=offset + tail_start, count=count % per_req).items
+        mems = api.groups.get_members(group_id=group_id,
+                                      offset=offset + tail_start,
+                                      count=count % per_req,
+                                      fields=['bdate']).items
         total_mems.extend(mems)
     return {'items': total_mems}
 
@@ -38,7 +41,7 @@ async def get_subscriptions_members(api: API, user_id: int):
     total_mems = []
     for sub in subs:
         try:
-            mems = await api.groups.get_members(group_id=sub)  # private group
+            mems = await api.groups.get_members(group_id=str(sub))  # private group
         except:
             continue
         total_mems.extend(mems.items)
@@ -62,12 +65,15 @@ def get_friends_script(api, user_id: int, offset: int, count: int, per_req: int)
     total_friends = []
     i = offset
     while i + per_req <= offset + count:
-        friends = api.friends.get(user_id=user_id, offset=i, count=per_req).items
+        friends = api.friends.get(user_id=user_id, offset=i, count=per_req, fields=['bdate'], lang='ru').items
         total_friends.extend(friends)
         i += per_req
     if count % per_req != 0:
         tail_start = count - count % per_req
-        friends = api.friends.get(user_id=user_id, offset=offset + tail_start, count=count % per_req).items
+        friends = api.friends.get(user_id=user_id,
+                                  offset=offset + tail_start,
+                                  count=count % per_req,
+                                  fields=['bdate']).items
         total_friends.extend(friends)
     return {'items': total_friends}
 
